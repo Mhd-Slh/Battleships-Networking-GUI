@@ -1,7 +1,7 @@
 # Battleships
 
-A Java implementation of the classic Battleship game, combining a JavaFX graphical interface for ship placement with a socket-based client/server foundation for multiplayer play.
-The project implements grid-based ship placement with rotation and validation, hit/miss/sunk game logic, and a threaded server that relays messages between two connected clients.
+A Java implementation of the classic Battleship game with real-time multiplayer over a network, built with a JavaFX interface for ship placement and combat.
+The project implements ship placement with rotation and validation, a custom TCP message protocol for syncing formations and shots between players, and turn-based hit/miss/sunk resolution with win/loss detection.
 
 ## Requirements
 
@@ -12,30 +12,25 @@ Download the JavaFX SDK from [gluonhq.com/products/javafx](https://gluonhq.com/p
 
 ## Running the Project
 
-From the project directory, compile and run the placement GUI with the JavaFX SDK on the module path:
+From the project directory, compile and run with the JavaFX SDK on the module path:
 
-\`\`\`bash
+```bash
 javac --module-path "/path/to/javafx-sdk-XX/lib" --add-modules javafx.controls,javafx.fxml *.java
 java --module-path "/path/to/javafx-sdk-XX/lib" --add-modules javafx.controls,javafx.fxml Main
-\`\`\`
+```
 
-The networking layer can be run independently to test the client/server relay:
+To play a match, run the program on two machines (or two terminals on the same machine):
 
-\`\`\`bash
-java GameServer      # waits for two client connections
-java GameClient      # run once per client, in separate terminals
-\`\`\`
+- On one instance, click **Host Game** and enter a port to listen on.
+- On the other, click **Connect to Game** and enter the host's IP address and port.
+
+Once both players place and save their ships, the game starts automatically.
 
 ## Features
 
-- Interactive 10x10 JavaFX grid for ship placement
-- Left-click to place, right-click to rotate, with live green highlighting for valid placement
-- Standard Battleship fleet (Carrier, Battleship, Cruiser, Submarine, Destroyer)
-- Board logic for placement validation and hit/miss/sunk resolution
-- Threaded socket server relaying messages between two connected clients
-
-## In Progress
-
-- Connecting GUI actions (placement, attacks) to the network layer
-- Defining a message protocol for syncing game state between clients
-- Attack-phase GUI and win/loss screen
+- Interactive 10x10 JavaFX grids for ship placement and combat, with click-to-place, right-click rotation, and live green highlighting for valid placement
+- Host/connect networking over TCP sockets, with a background listener thread parsing incoming messages
+- Custom text-based message protocol (`FORMATION`, `READY`, `SHOT`, `RESULT`, `GAME OVER`) for syncing game state between players
+- Turn-based combat with hit/miss/sunk resolution, synced live to both players' boards
+- Win/loss detection with an end-of-game alert
+- Debug menu for quickly sinking all ships or checking sunk status during testing
